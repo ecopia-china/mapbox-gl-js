@@ -18,9 +18,28 @@ import type Dispatcher from '../util/dispatcher';
 import type Tile from './tile';
 import type {Callback} from '../types/callback';
 import type {Cancelable} from '../types/cancelable';
-import type {VectorSourceSpecification, PromoteIdSpecification} from '../style-spec/types';
+import type {
+    VectorSourceSpecification,
+    VectorSourceRequestSpecification,
+    PromoteIdSpecification
+} from '../style-spec/types';
 import type Actor from '../util/actor';
 import type {LoadVectorTileResult} from './vector_tile_worker_source';
+
+
+class RequestData {
+    dataset: ?string;
+    otherdata: ?string;
+
+    constructor(option: VectorSourceRequestSpecification) {
+        this.dataset = option.dataset || '';
+        this.otherdata = option.otherdata || '';
+    }
+
+    serializeToObject() {
+        return {"dataset": this.dataset, "otherdata": this.otherdata};
+    }
+}
 
 /**
  * A source containing vector tiles in [Mapbox Vector Tile format](https://docs.mapbox.com/vector-tiles/reference/).
@@ -57,6 +76,7 @@ class VectorTileSource extends Evented implements Source {
     scheme: string;
     tileSize: number;
     promoteId: ?PromoteIdSpecification;
+    requestdata: ?RequestData;
 
     _options: VectorSourceSpecification;
     _collectResourceTiming: boolean;
@@ -85,6 +105,7 @@ class VectorTileSource extends Evented implements Source {
         this.reparseOverscaled = true;
         this.isTileClipped = true;
         this._loaded = false;
+        this.requestdata = options.requestdata ? new RequestData(options.requestdata) : null;
 
         extend(this, pick(options, ['url', 'scheme', 'tileSize', 'promoteId']));
         this._options = extend({type: 'vector'}, options);
@@ -209,6 +230,15 @@ class VectorTileSource extends Evented implements Source {
             promoteId: this.promoteId,
             isSymbolTile: tile.isSymbolTile
         };
+
+        if (this.requestdata) {
+            params.request['method'] = "POST";
+            params.request.body = JSON.stringify(this.requestdata.serializeToObject());
+            params.request.headers = {
+                'Content-Type': 'application/json'
+            };
+        }
+
         params.request.collectResourceTiming = this._collectResourceTiming;
 
         if (!tile.actor || tile.state === 'expired') {
