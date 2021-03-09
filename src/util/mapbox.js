@@ -403,8 +403,7 @@ export class MapLoadEvent extends TelemetryEvent {
             if (customAccessToken || config.ACCESS_TOKEN) {
                 this.queueRequest({id: mapId, timestamp: Date.now()}, customAccessToken);
             } else {
-                console.log('BBBBBBBB');
-                this.errorCb(new Error('A valid Mapbox access token is required to use Mapbox GL JS. To create an account or a new access token, visit https://account.mapbox.com/'));
+                //this.errorCb(new Error('A valid Mapbox access token is required to use Mapbox GL JS. To create an account or a new access token, visit https://account.mapbox.com/'));
             }
         }
     }

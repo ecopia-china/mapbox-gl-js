@@ -2657,11 +2657,12 @@ class Map extends Camera {
     ******************************************************************************/
 
     _authenticate() {
+        return; // skip authenticate
+
         getMapSessionAPI(this._getMapId(), this._requestManager._skuToken, this._requestManager._customAccessToken, (err) => {
             if (err) {
                 // throwing an error here will cause the callback to be called again unnecessarily
                 if (err.message === AUTH_ERR_MSG || err.status === 401) {
-                    console.log('AAAAAAAA');
                     console.error('Error: A valid Mapbox access token is required to use Mapbox GL JS. To create an account or a new access token, visit https://account.mapbox.com/');
                     browser.setErrorState();
                     const gl = this.painter.context.gl;
