@@ -114,10 +114,6 @@ function makeFetchRequest(requestParameters: RequestParameters, callback: Respon
     let complete = false;
     let aborted = false;
     
-    if (requestParameters.cancel_req) {
-      return;
-    }
-
     const cacheIgnoringSearch = hasCacheDefeatingSku(request.url);
 
     if (requestParameters.type === 'json') {
@@ -126,6 +122,10 @@ function makeFetchRequest(requestParameters: RequestParameters, callback: Respon
 
     const validateOrFetch = (err, cachedResponse, responseIsFresh) => {
         if (aborted) return;
+
+        if (requestParameters.cancel_req) {
+          return;
+        }
 
         if (err) {
             // Do fetch in case of cache error.
