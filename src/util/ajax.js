@@ -65,7 +65,7 @@ export type RequestParameters = {
     type?: 'string' | 'json' | 'arrayBuffer',
     credentials?: 'same-origin' | 'include',
     collectResourceTiming?: boolean,
-    cancel_re1?: boolean
+    cancel_req?: boolean
 };
 
 export type ResponseCallback<T> = (error: ?Error, data: ?T, cacheControl: ?string, expires: ?string) => void;
@@ -114,8 +114,11 @@ function makeFetchRequest(requestParameters: RequestParameters, callback: Respon
     let complete = false;
     let aborted = false;
 
+    if (requestParameters.cancel_req) {
+      return;
+    }
+
     const cacheIgnoringSearch = hasCacheDefeatingSku(request.url);
-    console.log('DDDDDD', requestParameters);
 
     if (requestParameters.type === 'json') {
         request.headers.set('Accept', 'application/json');
