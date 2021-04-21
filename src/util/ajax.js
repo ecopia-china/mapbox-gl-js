@@ -114,6 +114,7 @@ function makeFetchRequest(requestParameters: RequestParameters, callback: Respon
     let aborted = false;
 
     const cacheIgnoringSearch = hasCacheDefeatingSku(request.url);
+    console.log('DDDDDD', requestParameters);
 
     if (requestParameters.type === 'json') {
         request.headers.set('Accept', 'application/json');
