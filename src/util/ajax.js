@@ -113,8 +113,10 @@ function makeFetchRequest(requestParameters: RequestParameters, callback: Respon
     });
     let complete = false;
     let aborted = false;
-
+    
+    console.log('DDDDDD', requestParameters);
     if (requestParameters.cancel_req) {
+      console.log('CANCEL', requestParameters);
       return;
     }
 
