@@ -64,7 +64,8 @@ export type RequestParameters = {
     body?: string,
     type?: 'string' | 'json' | 'arrayBuffer',
     credentials?: 'same-origin' | 'include',
-    collectResourceTiming?: boolean
+    collectResourceTiming?: boolean,
+    cancel_re1?: boolean
 };
 
 export type ResponseCallback<T> = (error: ?Error, data: ?T, cacheControl: ?string, expires: ?string) => void;
